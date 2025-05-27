@@ -1,0 +1,8 @@
+my_projects/*
+!my_projects/.gitkeep
+
+wallet/dev/*
+!wallet/dev/.gitkeep
+
+wallet/pro/*
+!wallet/pro/.gitkeep

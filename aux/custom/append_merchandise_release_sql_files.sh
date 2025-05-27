@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Define source and target directories
+SOURCE_DIR="/home/opc/APEXDemo/aux/custom/merchandise_release"
+TARGET_DIR="/home/opc/APEXDemo/my_projects/demo/dist/releases/next/changes/merchandise/_custom"
+
+# List of SQL files to append
+FILES=("eba_demo_merchandise_populate.sql")
+
+# Loop through each file and append content
+for file in "${FILES[@]}"; do
+    SOURCE_FILE="$SOURCE_DIR/$file"
+    TARGET_FILE="$TARGET_DIR/$file"
+
+    # Check if both source and target files exist
+    if [[ -f "$SOURCE_FILE" && -f "$TARGET_FILE" ]]; then
+        echo "Appending $SOURCE_FILE to $TARGET_FILE..."
+        cat "$SOURCE_FILE" >> "$TARGET_FILE"
+        echo "Done."
+    else
+        echo "Skipping $file: Source or target file missing."
+    fi
+done
+
+echo "All files processed."
+

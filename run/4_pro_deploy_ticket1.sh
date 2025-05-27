@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Set Oracle Wallet Location (if needed)
+export TNS_ADMIN=/home/opc/APEXDemo/wallet/pro
+
+# Define colors
+BLUE='\033[34m'
+RED='\033[31m'
+GREEN='\033[32m'
+NC='\033[0m' # No color (reset)
+
+echo -e "${BLUE}Connected to production database.${NC}"
+echo -e "${BLUE}Listing current tables. We should have the initial data model, where employee_performance is not here${NC}"
+echo ""
+echo -e "${BLUE}Running ${GREEN}tables; ${BLUE}connected to the production database${NC}"
+read -p "Press any key to check existing tables..." -n 1 -s
+echo ""
+echo ""
+
+sql -name apex_pro <<EOF
+tables;
+exit
+EOF
+
+echo ""
+echo -e "${BLUE}We are ready to deploy database application version 1.1 base_release ${NC}"
+echo ""
+
+echo -e "${BLUE}Moving to the project directory: /home/opc/dbcicd/my_projects/sample ${NC}"
+cd /home/opc/APEXDemo/my_projects/demo
+
+echo -e "${BLUE}?~_~T~P Connected to the production database and deploying database application version 1.1.${NC}"
+echo ""
+echo -e "${GREEN}sql -name apex_pro${NC}"
+echo -e "${RED}project deploy -file artifact/apex_demo-1.1.zip -verbose${NC}"
+echo ""
+read -p "Press any key to execute..." -n 1 -s
+echo ""
+
+sql -name apex_pro <<EOF
+SET SCAN OFF;
+project deploy -file artifact/apex_demo-1.1.zip -verbose
+exit
+EOF
+
+echo -e "${RED}?~_~S~K Verifying deployment: listing tables in the production database...${NC}"
+echo ""
+
+sql -name apex_pro <<EOF
+tables;
+exit
+EOF
+
+
+echo -e "${RED}?~\~E Salay Increase functionality has been successfully deployed to production! ?~_~N~I${NC}"
+    
+git checkout main
+git pull origin main
+
+
